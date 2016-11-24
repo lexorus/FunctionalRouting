@@ -11,8 +11,10 @@ import UIKit
 struct NavigationController<Result> {
     let build: (_ f: @escaping (Result, UINavigationController) -> ()) -> UINavigationController
     
-    func run() -> UINavigationController {
-        return build { _ in }
+    func run(completion: ((Result) -> ())? = nil) -> UINavigationController {
+        return build { (result, navigationController) in
+            completion?(result)
+        }
     }
     
     func flatMap<B>(_ transform: @escaping (Result) -> ViewController<B>) -> NavigationController<B> {
