@@ -17,13 +17,25 @@ struct NavigationController<Result> {
         }
     }
     
-    func flatMap<B>(_ transform: @escaping (Result) -> ViewController<B>) -> NavigationController<B> {
+    func push<B>(_ transform: @escaping (Result) -> ViewController<B>) -> NavigationController<B> {
         return NavigationController<B> { callback in
             let navigationController = self.build { result, navigationController in
                 let rootViewController = transform(result).run { result in
                     callback(result, navigationController)
                 }
                 navigationController.pushViewController(rootViewController, animated: true)
+                
+            }
+            return navigationController
+        }
+    }
+    
+    func present<B>(_ transform: @escaping (Result) -> NavigationController<B>) -> NavigationController<B> {
+        return NavigationController<B> { callback in
+            let navigationController = self.build { result, navigationController in
+                navigationController.presentModal(flow: transform(result)) { result in
+                    callback(result, navigationController)
+                }
                 
             }
             return navigationController
@@ -51,7 +63,11 @@ precedencegroup LeftAssociativity {
 infix operator >>> : LeftAssociativity
 
 func >>><A,B>(lhs: NavigationController<A>, rhs: @escaping (A) -> ViewController<B>) -> NavigationController<B> {
-    return lhs.flatMap(rhs)
+    return lhs.push(rhs)
+}
+
+func + <A, B> (lhs: NavigationController<A>, rhs: @escaping (A) -> NavigationController<B>) -> NavigationController<B> {
+    return lhs.present(rhs)
 }
 
 func map<A,B>(navigationController: NavigationController<A>,
