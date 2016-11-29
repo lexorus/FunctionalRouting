@@ -8,16 +8,6 @@
 
 import UIKit
 
-func aViewController() -> ViewController<()> {
-    return ViewController { completion in
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let viewController = storyboard.instantiateViewController(withIdentifier: "AViewController") as! AViewController
-        viewController.onComplete = completion
-
-        return viewController
-    }
-}
-
 final class AViewController: UIViewController {
     var onComplete: (() -> ())?
     

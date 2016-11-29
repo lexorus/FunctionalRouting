@@ -15,25 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        let mainFLow = navigationController(aViewController())
-            >>> bViewController
-            >>> cViewController
-            >>> dViewController
-        
-        let additionalFlow = navigationController(bViewController())
-            >>> fViewController
-            >>> aViewController
-        
-        let transitionToAdditionalFlow: (() -> NavigationController<()>) = {
-            return additionalFlow
-        }
-        
-        let combinedFlows = mainFLow + transitionToAdditionalFlow
-        
-        window?.rootViewController = combinedFlows.run {
-            print("Combined flows finished")
-        }
-
         return true
     }
     
