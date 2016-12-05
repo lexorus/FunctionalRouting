@@ -15,6 +15,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        let flow1 = navigationController(aViewController())
+            >>> cViewController
+            >>> bViewController
+        
+        let flow2 = navigationController(cViewController())
+            >>> bViewController
+            >>> fViewController
+        
+        let flow1ToFlow2: () -> NavigationController<()> = {
+            return flow2
+        }
+        
+        let composedFlows = flow1 + flow1ToFlow2
+        
+        window?.rootViewController = composedFlows.run(completion: {
+            print("a flow finished")
+        })
+        
         return true
     }
     
